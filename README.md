@@ -1,6 +1,7 @@
 # Ku-polls
 
-Ku polls web is a wbe application use to creating polls/surveys for Kasetsart students and staff.
+Ku polls web is a web application use to creating polls/surveys for Kasetsart students and staff.
+
 
 If you have any questions about Ku-polls 
 please go to one of the following places:
