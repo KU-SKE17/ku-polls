@@ -1,2 +1,3 @@
 # ku-polls
-This is polls website using Django
+
+[wiki](https://github.com/ZEZAY/ku-polls/wiki)
