@@ -5,8 +5,8 @@ Ku polls web is a web application use to creating polls/surveys for Kasetsart st
 If you have any questions about Ku-polls, 
 please go to one of the following places:
 
-[Ku-polls Wiki](https://github.com/ZEZAY/ku-polls/wiki) or
-[Vision Statement](https://github.com/ZEZAY/ku-polls/wiki/Vision-Statement)
+* [Ku-polls Wiki](https://github.com/ZEZAY/ku-polls/wiki)
+* [Vision Statement](https://github.com/ZEZAY/ku-polls/wiki/Vision-Statement)
 
 ## Contributing
 
