@@ -10,8 +10,6 @@ please go to one of the following places:
 
 ## Contributing
 
-We are openly for any pull requests, and looking for any userfull features.
-
-But the basically requirements for this project, please follow:
+The basically requirements for this project, please follow:
 
 [Requirements](https://github.com/ZEZAY/ku-polls/wiki/Requirements)
