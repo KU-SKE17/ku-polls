@@ -13,3 +13,7 @@ please go to one of the following places:
 The basically requirements for this project, please follow:
 
 [Requirements](https://github.com/ZEZAY/ku-polls/wiki/Requirements)
+
+## process
+
+[Iteration 1 Plan](https://github.com/ZEZAY/ku-polls/wiki/Iteration-1-Plan)
