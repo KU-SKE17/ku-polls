@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+# from . import views
+from polls import views
+
 
 urlpatterns = [
+    # writed new mysite/views.py file
+    # path('', views.index, name="main_index"),
+    path('', views.IndexView.as_view(), name="main_index"),
     path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
 ]
