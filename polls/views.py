@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
@@ -41,6 +42,13 @@ class ResultsView(generic.DetailView):
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     # q = Question.objects.get(id=question_id)
+    if not question.can_vote():
+        messages.error(request, f"Poll: \"{question.question_text}\" is not longer publish.")
+        return HttpResponseRedirect(reverse('polls:index'))
+        # return render(request, reverse('polls:index'), {
+        #     'question': question,
+        #     'error_message': f"Poll: \"{question.question_text}\" is not longer publish.",
+        # })
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
