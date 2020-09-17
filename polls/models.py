@@ -20,13 +20,20 @@ class Question(models.Model):
     was_published_recently.boolean = True
     was_published_recently.short_description = 'Published recently?'
 
-    def was_closed_recently(self):
+    def was_closed(self):
         now = timezone.now()
-        return now - datetime.timedelta(days=1) <= self.end_date <= now
+        return self.end_date <= now
 
-    was_closed_recently.admin_order_field = 'pub_date'
-    was_closed_recently.boolean = True
-    was_closed_recently.short_description = 'Published recently?'
+    was_closed.admin_order_field = 'pub_date'
+    was_closed.boolean = True
+    was_closed.short_description = 'Published recently?'
+
+    def is_published(self):
+        now = timezone.now()
+        return self.pub_date <= now
+
+    def can_vote(self):
+        return self.is_published() and not self.was_closed()
 
 
 class Choice(models.Model):
