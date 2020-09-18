@@ -9,13 +9,16 @@ from .models import Question
 
 class QuestionModelTests(TestCase):
 
+    def setUp(self):
+        self.add_time_one_year = datetime.timedelta(days=365)
+
     def test_was_published_recently_with_future_question(self):
         """
         was_published_recently() returns False for questions whose pub_date
         is in the future.
         """
         time = timezone.now() + datetime.timedelta(days=30)
-        future_question = Question(pub_date=time)
+        future_question = Question(pub_date=time, end_date=time+self.add_time_one_year)
         self.assertIs(future_question.was_published_recently(), False)
 
     def test_was_published_recently_with_old_question(self):
@@ -24,7 +27,7 @@ class QuestionModelTests(TestCase):
         is older than 1 day.
         """
         time = timezone.now() - datetime.timedelta(days=1, seconds=1)
-        old_question = Question(pub_date=time)
+        old_question = Question(pub_date=time, end_date=time+self.add_time_one_year)
         self.assertIs(old_question.was_published_recently(), False)
 
     def test_was_published_recently_with_recent_question(self):
@@ -33,8 +36,54 @@ class QuestionModelTests(TestCase):
         is within the last day.
         """
         time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
-        recent_question = Question(pub_date=time)
+        recent_question = Question(pub_date=time, end_date=time+self.add_time_one_year)
         self.assertIs(recent_question.was_published_recently(), True)
+
+    def test_was_closed_is_work(self):
+        """
+        was_closed() returns True for questions whose end_date is now or passed.
+        """
+        time = timezone.now()
+        question1 = Question(pub_date=time, end_date=time+self.add_time_one_year)
+        self.assertIs(question1.was_closed(), False)
+        question2 = Question(pub_date=time, end_date=time)
+        self.assertIs(question2.was_closed(), True)
+        question3 = Question(pub_date=time, end_date=time-datetime.timedelta(days=1))
+        self.assertIs(question3.was_closed(), True)
+
+    def test_is_published_is_work(self):
+        """
+        is_published() returns True for questions whose pub_date is already published.
+        """
+        time = timezone.now()
+        question1 = Question(pub_date=time, end_date=time+self.add_time_one_year)
+        self.assertIs(question1.is_published(), True)
+        question2 = Question(pub_date=time-self.add_time_one_year, end_date=time+self.add_time_one_year)
+        self.assertIs(question2.is_published(), True)
+        question3 = Question(pub_date=time+self.add_time_one_year, end_date=time+(self.add_time_one_year*2))
+        self.assertIs(question3.is_published(), False)
+        question4 = Question(pub_date=time+self.add_time_one_year, end_date=time)
+        self.assertIs(question4.is_published(), False)
+        question5 = Question(pub_date=time, end_date=time)
+        self.assertIs(question5.is_published(), True)
+
+    def test_can_vote_is_work(self):
+        """
+        can_vote() returns True for questions whose pub_date is already published and end_date is not come yet.
+        """
+        time = timezone.now()
+        question1 = Question(pub_date=time, end_date=time+self.add_time_one_year)
+        self.assertIs(question1.can_vote(), True)
+        question2 = Question(pub_date=time-self.add_time_one_year, end_date=time+self.add_time_one_year)
+        self.assertIs(question2.can_vote(), True)
+        question3 = Question(pub_date=time+self.add_time_one_year, end_date=time+(self.add_time_one_year*2))
+        self.assertIs(question3.can_vote(), False)
+        question4 = Question(pub_date=time+self.add_time_one_year, end_date=time)
+        self.assertIs(question4.can_vote(), False)
+        question5 = Question(pub_date=time, end_date=time)
+        self.assertIs(question5.can_vote(), False)
+        question6 = Question(pub_date=time-self.add_time_one_year, end_date=time)
+        self.assertIs(question6.can_vote(), False)
 
 def create_question(question_text, days):
     """
@@ -43,7 +92,7 @@ def create_question(question_text, days):
     in the past, positive for questions that have yet to be published).
     """
     time = timezone.now() + datetime.timedelta(days=days)
-    return Question.objects.create(question_text=question_text, pub_date=time)
+    return Question.objects.create(question_text=question_text, pub_date=time, end_date=time+datetime.timedelta(days=365))
 
 
 class QuestionIndexViewTests(TestCase):

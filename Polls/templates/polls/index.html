@@ -2,13 +2,32 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
 
+<div id="header">
+    {% if messages %}
+    <ul class="messages">
+        {% for msg in messages %}
+        <strong>{{ msg }}</strong>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
 
+<div id="middle">
 {% if latest_question_list %}
     <ul>
     {% for question in latest_question_list %}
-        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-    {% endfor %}
+        <p>
+            {{ question.question_text }}
+            {% if question.can_vote %}
+            <a href="{% url 'polls:detail' question.id %}"><button>vote</button></a>
+            {% endif %}
+            <a href="{% url 'polls:results' question.id %}"><button>results</button></a>
+        </p>
+        {% endfor %}
     </ul>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+</div>
+
+<div id="bottom"></div>
