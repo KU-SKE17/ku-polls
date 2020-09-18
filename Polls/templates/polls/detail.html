@@ -2,7 +2,6 @@
 
 {% if error_message %}<p>
     <strong>{{ error_message }}</strong>
-    <a href="{% url 'polls:index' %}"><button>Back to index</button></a>
 </p>{% endif %}
 
 <form action="{% url 'polls:vote' question.id %}" method="post">
@@ -11,5 +10,7 @@
     <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
     <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
 {% endfor %}
-<input type="submit" value="Vote">
+    <input type="submit" value="Vote">
 </form>
+
+<a href="{% url 'polls:index' %}"><button>Back to List of Polls</button></a>
