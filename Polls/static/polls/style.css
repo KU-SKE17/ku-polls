@@ -1,6 +1,33 @@
+body {
+    margin: 0px;
+    background: url('images/flybutter555.gif');
+    background-repeat: no-repeat, repeat;
+    background-size: cover;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    color: #800180ba;
+    /* background-color: #fbe3fb; */
+}
+
 h1, strong {
     color: white;
     text-align: center;
+}
+
+button, input {
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-weight: bold;
+    color: #800180ba;
+    border-width: 2px;  
+    border-style: solid;
+    border-radius: 18px;
+    border-color: #80018052;
+    background-color: #fbe3fb;
+    padding: 4px 14px;
+}
+
+button:hover, input:hover {
+    transition: .3s;
+    background-color: #80018052;
 }
 
 #header {
@@ -24,4 +51,9 @@ h1, strong {
     height: 8%;
     border-top-left-radius: 32px;
     border-top-right-radius: 32px;
+}
+
+#items_list {
+    margin-top: 4%;
+    margin-left: 10%; 
 }

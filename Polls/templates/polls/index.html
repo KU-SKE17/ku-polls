@@ -6,28 +6,28 @@
     {% if messages %}
     <ul class="messages">
         {% for msg in messages %}
-        <strong>{{ msg }}</strong>
+        <h1>{{ msg }}</h1>
         {% endfor %}
     </ul>
     {% endif %}
 </div>
 
-<div id="middle">
-{% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-        <p>
-            {{ question.question_text }}
-            {% if question.can_vote %}
-            <a href="{% url 'polls:detail' question.id %}"><button>vote</button></a>
-            {% endif %}
-            <a href="{% url 'polls:results' question.id %}"><button>results</button></a>
-        </p>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+<div id="middle" style="background-image: url;">
+    <div id="items_list">
+    {% if latest_question_list %}
+        {% for question in latest_question_list %}
+            <p>
+                {{ question.question_text }}
+                {% if question.can_vote %}
+                <a href="{% url 'polls:detail' question.id %}"><button>vote</button></a>
+                {% endif %}
+                <a href="{% url 'polls:results' question.id %}"><button>results</button></a>
+            </p>
+            {% endfor %}
+    {% else %}
+        <p>No polls are available.</p>
+    {% endif %}
+    </div>
 </div>
 
 <div id="bottom"></div>
