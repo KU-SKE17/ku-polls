@@ -20,18 +20,25 @@ class IndexView(generic.ListView):
         """
         return Question.objects.filter(
             pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:5]
+        ).order_by('-pub_date')[:]
 
 
-class DetailView(generic.DetailView):
-    model = Question
-    template_name = 'polls/detail.html'
+# class DetailView(generic.DetailView):
+#     model = Question
+#     template_name = 'polls/detail.html'
+#
+#     def get_queryset(self):
+#         """
+#         Excludes any questions that aren't published yet.
+#         """
+#         return Question.objects.filter(pub_date__lte=timezone.now())
 
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if not question.can_vote():
+        messages.error(request, f"Poll: \"{question.question_text}\" is not longer publish.")
+        return HttpResponseRedirect(reverse('polls:index'))
+    return render(request, 'polls/detail.html', {'question': question})
 
 
 class ResultsView(generic.DetailView):
@@ -41,14 +48,6 @@ class ResultsView(generic.DetailView):
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    # q = Question.objects.get(id=question_id)
-    if not question.can_vote():
-        messages.error(request, f"Poll: \"{question.question_text}\" is not longer publish.")
-        return HttpResponseRedirect(reverse('polls:index'))
-        # return render(request, reverse('polls:index'), {
-        #     'question': question,
-        #     'error_message': f"Poll: \"{question.question_text}\" is not longer publish.",
-        # })
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
