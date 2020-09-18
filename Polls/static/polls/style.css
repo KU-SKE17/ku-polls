@@ -1,7 +1,27 @@
-li a {
-    color: green;
+h1, strong {
+    color: white;
+    text-align: center;
 }
 
-body {
-    background: white url("images/ske_logo.jpg") no-repeat;
+#header {
+    color: white;
+    text-align: center;
+
+    padding: 4px;
+    background-color: purple;
+    height: 12%;
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+}
+
+#middle {
+    padding: 4px;
+    height: 80%;
+}
+
+#bottom {
+    background-color: purple;
+    height: 8%;
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
 }
