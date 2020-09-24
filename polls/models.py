@@ -45,6 +45,16 @@ class Question(models.Model):
     was_closed_recently.boolean = True
     was_closed_recently.short_description = 'Closed recently?'
 
+    def total_vote(self):
+        votes = self.choice_set.aggregate(models.Sum('votes'))
+        return votes['votes__sum']
+
+    def reset_vote(self):
+        choices = self.choice_set.all()
+        for choice in choices:
+            choice.votes = 0
+            choice.save()
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)

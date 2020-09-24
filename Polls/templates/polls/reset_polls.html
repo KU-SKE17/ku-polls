@@ -1,0 +1,43 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+
+<div id="header">
+    {% if messages %}
+    <ul class="messages">
+        {% for msg in messages %}
+        <h1>{{ msg }}</h1>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+<div id="middle">
+    <div id="items_list">
+        {% if latest_question_list %}
+        <table>
+            <tr>
+                <th>Question</th>
+                <th>Votes</th>
+                <th>Reset?</th>
+            </tr>
+            <tr>
+                <th>----------------</th>
+                <th>----------------</th>
+                <th>-----------</th>
+            </tr>
+            {% for question in latest_question_list %}
+            <tr>
+                <td><a href="{% url 'polls:results' question.id %}">{{ question.question_text }}</a></td>
+                <th>{{ question.total_vote }}</th>
+                <td><a href="{% url 'polls:reset' question.id %}"><button> reset! </button></a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <p>No polls are available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div id="bottom"></div>
