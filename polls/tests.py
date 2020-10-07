@@ -8,6 +8,7 @@ from .models import Question
 
 
 class QuestionModelTests(TestCase):
+    """Tests of question model"""
 
     def setUp(self):
         self.add_time_one_year = datetime.timedelta(days=365)
@@ -85,6 +86,7 @@ class QuestionModelTests(TestCase):
         question6 = Question(pub_date=time-self.add_time_one_year, end_date=time)
         self.assertIs(question6.can_vote(), False)
 
+
 def create_question(question_text, days):
     """
     Create a question with the given `question_text` and published the
@@ -96,6 +98,7 @@ def create_question(question_text, days):
 
 
 class QuestionIndexViewTests(TestCase):
+    """Tests of index view"""
     def test_no_questions(self):
         """
         If no questions exist, an appropriate message is displayed.
@@ -152,7 +155,9 @@ class QuestionIndexViewTests(TestCase):
             ['<Question: Past question 2.>', '<Question: Past question 1.>']
         )
 
+
 class QuestionDetailViewTests(TestCase):
+    """Tests of detail view"""
     def test_future_question(self):
         """
         The detail view of a question with a pub_date in the future
