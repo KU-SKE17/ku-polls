@@ -10,6 +10,8 @@ git:
 install:
   - pip install -r requirements.txt
 
+before_script:
+  - python manage.py migrate
 # script to run tests. Script can have many commands, one per line.
 script:
   - coverage run manage.py test polls
