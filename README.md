@@ -1,5 +1,8 @@
 # Ku-polls
 
+[![Build Status](https://travis-ci.com/ZEZAY/ku-polls.svg?branch=master)](https://travis-ci.com/ZEZAY/ku-polls)
+[![codecov](https://codecov.io/gh/ZEZAY/ku-polls/branch/master/graph/badge.svg)](https://codecov.io/gh/ZEZAY/ku-polls)
+
 Ku polls web is a web application use to creating polls/surveys for Kasetsart students and staff.
 
 If you have any questions about Ku-polls, 
