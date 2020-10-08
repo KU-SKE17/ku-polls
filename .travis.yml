@@ -18,9 +18,9 @@ install:
 
 before_script:
   - touch .env
-  - echo SECRET_KEY=$SECRET_KEY >> .env
-  - echo DEBUG=$DEBUG >> .env
-  - echo TIME_ZONE=$TIME_ZONE >> .env
+  - echo SECRET_KEY='secret_key' >> .env
+  - echo DEBUG=True >> .env
+  - echo TIME_ZONE='Asia/Bangkok' >> .env
 #  - cp .env.example .env
   - python manage.py migrate
 # script to run tests. Script can have many commands, one per line.
