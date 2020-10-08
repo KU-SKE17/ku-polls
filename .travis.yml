@@ -17,7 +17,11 @@ install:
   - pip install -r requirements.txt
 
 before_script:
-  - cp .env.example .env
+  - touch .env
+  - echo SECRET_KEY=$SECRET_KEY >> .env
+  - echo DEBUG=$DEBUG >> .env
+  - echo TIME_ZONE=$TIME_ZONE >> .env
+#  - cp .env.example .env
   - python manage.py migrate
 # script to run tests. Script can have many commands, one per line.
 script:
