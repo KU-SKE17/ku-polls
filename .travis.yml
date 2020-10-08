@@ -14,7 +14,7 @@ env:
 
 # Install any dependencies
 install:
-  - pip3 install -r requirements.txt
+  - pip install -r requirements.txt
 
 before_script:
   - cp .env.example .env
