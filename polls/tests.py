@@ -110,7 +110,7 @@ def create_question(question_text, days):
     given number of `days` offset to now (negative for questions published
     in the past, positive for questions that have yet to be published).
 
-    Return
+    Returns:
         Question : a new question
     """
     pub = timezone.now() + datetime.timedelta(days=days)

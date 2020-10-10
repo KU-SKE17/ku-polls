@@ -2,9 +2,9 @@ language: python
 
 python: "3.8"
 
-# don't clone more than necessary
-git:
-  depth: 1
+## don't clone more than necessary
+#git:
+#  depth: 1
 
 services:
   - mysql

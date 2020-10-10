@@ -28,7 +28,7 @@ class Question(models.Model):
         """Return true if pub_date passes in 24 hrs.
 
         Returns:
-            bool: true if question was published in 24 hrs.
+            bool : true if question was published in 24 hrs.
         """
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
@@ -41,7 +41,7 @@ class Question(models.Model):
         """Return true if end_date passed.
 
         Returns:
-            bool: true if question was closed.
+            bool : true if question was closed.
         """
         now = timezone.now()
         return self.end_date <= now
@@ -53,7 +53,7 @@ class Question(models.Model):
         """Return true if pub_date passed.
 
         Returns:
-            bool: true if question was published.
+            bool : true if question was published.
         """
         now = timezone.now()
         return self.pub_date <= now
@@ -65,7 +65,7 @@ class Question(models.Model):
         """Return true if pub_date passed and end_date did not pass yet.
 
         Returns:
-            bool: true if question is still active.
+            bool : true if question is still active.
         """
         return self.is_published() and not self.was_closed()
 
@@ -73,7 +73,7 @@ class Question(models.Model):
         """Return true if end_date passes in 24 hrs.
 
         Returns:
-            bool: true if question was closed in 24 hrs.
+            bool : true if question was closed in 24 hrs.
         """
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.end_date <= now
