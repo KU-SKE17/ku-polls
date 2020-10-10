@@ -19,14 +19,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-env = environ.Env()
-# reading .env file
-environ.Env.read_env()
+# env = environ.Env()
+# # reading .env file
+# environ.Env.read_env()
+#
+# SECRET_KEY = env('SECRET_KEY')
+# DEBUG = bool(env('DEBUG', default='False'))
+# TIME_ZONE = env('TIME_ZONE', default='UTC')
+# STATIC_URL = env('STATIC_URL', default='/static/')
 
-SECRET_KEY = env('SECRET_KEY')
-DEBUG = bool(env('DEBUG', default='False'))
-TIME_ZONE = env('TIME_ZONE', default='UTC')
-STATIC_URL = env('STATIC_URL', default='/static/')
+SECRET_KEY = '=f7io3#b^5zap3f0_e821cm2txkhn$^xj%5uuo816$r*bu$(9s'
+DEBUG = True
+TIME_ZONE = 'Asia/Bangkok'
+STATIC_URL = '/static/'
 
 ALLOWED_HOSTS = []
 
