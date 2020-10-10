@@ -1,3 +1,4 @@
+"""Models for Question and Choice."""
 import datetime
 
 from django.db import models
@@ -5,14 +6,30 @@ from django.utils import timezone
 
 
 class Question(models.Model):
+    """Question Model.
+
+    Args:
+        models : Question details (question_text, pub_date, end_date)
+    """
+
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
     end_date = models.DateTimeField('date closed')
 
     def __str__(self):
+        """Return a string represent of the question.
+
+        Returns:
+            String : the question text
+        """
         return self.question_text
 
     def was_published_recently(self):
+        """Return true if pub_date passes in 24 hrs.
+
+        Returns:
+            bool: true if question was published in 24 hrs.
+        """
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
@@ -21,6 +38,11 @@ class Question(models.Model):
     # was_published_recently.short_description = 'Published recently?'
 
     def was_closed(self):
+        """Return true if end_date passed.
+
+        Returns:
+            bool: true if question was closed.
+        """
         now = timezone.now()
         return self.end_date <= now
 
@@ -28,6 +50,11 @@ class Question(models.Model):
     was_closed.short_description = 'Closed?'
 
     def is_published(self):
+        """Return true if pub_date passed.
+
+        Returns:
+            bool: true if question was published.
+        """
         now = timezone.now()
         return self.pub_date <= now
 
@@ -35,9 +62,19 @@ class Question(models.Model):
     is_published.short_description = 'Published?'
 
     def can_vote(self):
+        """Return true if pub_date passed and end_date did not pass yet.
+
+        Returns:
+            bool: true if question is still active.
+        """
         return self.is_published() and not self.was_closed()
 
     def was_closed_recently(self):
+        """Return true if end_date passes in 24 hrs.
+
+        Returns:
+            bool: true if question was closed in 24 hrs.
+        """
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.end_date <= now
 
@@ -47,9 +84,20 @@ class Question(models.Model):
 
 
 class Choice(models.Model):
+    """Choice Model.
+
+    Args:
+        models : Choice details (question, choice_text, votes)
+    """
+
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
     def __str__(self):
+        """Return a string represent of the choice.
+
+        Returns:
+            String : the choice text
+        """
         return self.choice_text
