@@ -84,11 +84,20 @@ class Question(models.Model):
     was_closed_recently.short_description = 'Closed recently?'
 
     def update_question_vote(self):
+        """Update number of votes for each choice base on Vote item"""
         for choice in self.choice_set.all():
             choice.update_vote()
             choice.save()
 
     def voted_status(self, user):
+        """Return a string represent of the user vote status.
+
+        Args:
+            user : Current user
+
+        Return:
+            String : the user vote status
+        """
         previous_vote = user.vote_set.get(question=self)
         if previous_vote:
             return f"{user.first_name} have voted for {previous_vote.choice}"
@@ -123,8 +132,9 @@ class Vote(models.Model):
     """Vote Model.
 
     Args:
-        models : Choice details (question, choice_text, votes)
+        models : Vote details (question, choice, user)
     """
+
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
