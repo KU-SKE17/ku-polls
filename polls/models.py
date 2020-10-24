@@ -100,9 +100,9 @@ class Question(models.Model):
         """
         try:
             previous_vote = user.vote_set.get(question=self)
-            return f"{user.first_name} have voted for {previous_vote.choice}"
+            return f"{user.username} have voted for {previous_vote.choice}"
         except (KeyError, Vote.DoesNotExist):
-            return f"{user.first_name} have never voted for this question before"
+            return f"{user.username} have never voted for this question before"
 
 
 class Choice(models.Model):

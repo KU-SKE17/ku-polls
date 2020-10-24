@@ -10,7 +10,7 @@
     {% if user.username %}
     <div id="user-bar">
         <ul>
-            Current user: {{ user.first_name }}
+            Current user: {{ user.username }}
             <a href="{% url 'logout' %}"><button>Logout</button></a>
         </ul>
     </div>
