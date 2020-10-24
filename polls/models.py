@@ -98,10 +98,10 @@ class Question(models.Model):
         Return:
             String : the user vote status
         """
-        previous_vote = user.vote_set.get(question=self)
-        if previous_vote:
+        try:
+            previous_vote = user.vote_set.get(question=self)
             return f"{user.first_name} have voted for {previous_vote.choice}"
-        else:
+        except (KeyError, Vote.DoesNotExist):
             return f"{user.first_name} have never voted for this question before"
 
 
