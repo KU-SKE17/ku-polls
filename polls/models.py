@@ -1,6 +1,7 @@
 """Models for Question and Choice."""
 import datetime
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
@@ -82,6 +83,18 @@ class Question(models.Model):
     was_closed_recently.boolean = True
     was_closed_recently.short_description = 'Closed recently?'
 
+    def update_question_vote(self):
+        for choice in self.choice_set.all():
+            choice.update_vote()
+            choice.save()
+
+    def voted_status(self, user):
+        previous_vote = user.vote_set.get(question=self)
+        if previous_vote:
+            return f"{user.first_name} have voted for {previous_vote.choice}"
+        else:
+            return f"{user.first_name} have never voted for this question before"
+
 
 class Choice(models.Model):
     """Choice Model.
@@ -94,6 +107,9 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
+    def update_vote(self):
+        self.votes = len(self.vote_set.all())
+
     def __str__(self):
         """Return a string represent of the choice.
 
@@ -101,3 +117,14 @@ class Choice(models.Model):
             String : the choice text
         """
         return self.choice_text
+
+
+class Vote(models.Model):
+    """Vote Model.
+
+    Args:
+        models : Choice details (question, choice_text, votes)
+    """
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
