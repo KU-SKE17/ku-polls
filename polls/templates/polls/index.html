@@ -13,12 +13,14 @@
 </div>
 
 <div id="middle">
+    {% if user.first_name %}
     <div id="user-bar">
         <ul>
             Current user: {{ user.first_name }}
             <a href="{% url 'logout' %}"><button>Logout</button></a>
         </ul>
     </div>
+    {% endif %}
     <div id="items_list">
     {% if latest_question_list %}
         {% for question in latest_question_list %}
