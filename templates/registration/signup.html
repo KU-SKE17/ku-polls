@@ -5,6 +5,13 @@
 <div id="header">
     {% block content %}
     <ul><h1>Register</h1></ul>
+    {% if messages %}
+        <ul class="messages">
+            {% for msg in messages %}
+            <strong>{{ msg }}</strong>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </div>
 
 <div id="middle">

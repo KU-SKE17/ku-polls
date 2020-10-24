@@ -1,6 +1,9 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 
 def signup(request):
@@ -15,8 +18,10 @@ def signup(request):
             # login(request, user)
             # return redirect('polls:index')
             return redirect('login')
-        # what if form is not valid?
-        # we should display a message in signup.html
+        else:
+            msg = f"Form is not valid"
+            messages.error(request, msg)
+            return HttpResponseRedirect(reverse('signup'))
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
