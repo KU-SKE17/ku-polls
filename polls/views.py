@@ -1,5 +1,6 @@
 """Views for polls app."""
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -32,6 +33,7 @@ class IndexView(generic.ListView):
 #         """
 #         return Question.objects.filter(pub_date__lte=timezone.now())
 
+@login_required
 def detail(request, question_id):
     """View for detail page of that question_id question.
 
@@ -59,7 +61,7 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
 
-
+@login_required
 def vote(request, question_id):
     """View for vote page of that question_id question.
 

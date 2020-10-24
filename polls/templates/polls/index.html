@@ -12,7 +12,13 @@
     {% endif %}
 </div>
 
-<div id="middle" style="background-image: url;">
+<div id="middle">
+    <div id="user-bar">
+        <ul>
+            Current user: {{ user.first_name }}
+            <a href="{% url 'logout' %}"><button>Logout</button></a>
+        </ul>
+    </div>
     <div id="items_list">
     {% if latest_question_list %}
         {% for question in latest_question_list %}
