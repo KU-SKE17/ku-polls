@@ -7,6 +7,16 @@
 </div>
 
 <div id="middle">
+    {% if user.username %}
+    <div id="user-bar">
+        <ul>
+            Current user: {{ user.username }}
+            <a href="{% url 'logout' %}"><button>Logout</button></a>
+        </ul>
+    </div>
+    {% else %}
+        <ul><a href="{% url 'login' %}"><button>Login</button></a></ul>
+    {% endif %}
     <div id="items_list">
         <p>
             <a href="{% url 'polls:detail' question.id %}"><button>Vote again?</button></a>

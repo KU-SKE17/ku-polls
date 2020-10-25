@@ -1,12 +1,13 @@
 """Views for polls app."""
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Choice, Question
+from .models import Choice, Question, Vote
 
 
 class IndexView(generic.ListView):
@@ -32,6 +33,7 @@ class IndexView(generic.ListView):
 #         """
 #         return Question.objects.filter(pub_date__lte=timezone.now())
 
+@login_required
 def detail(request, question_id):
     """View for detail page of that question_id question.
 
@@ -46,11 +48,12 @@ def detail(request, question_id):
         or index page with error messages
     """
     question = get_object_or_404(Question, pk=question_id)
+    status = question.voted_status(request.user)
     if not question.can_vote():
         msg = f"Poll: \"{question.question_text}\" is not longer publish."
         messages.error(request, msg)
         return HttpResponseRedirect(reverse('polls:index'))
-    return render(request, 'polls/detail.html', {'question': question})
+    return render(request, 'polls/detail.html', {'question': question, 'vote_status': status})
 
 
 class ResultsView(generic.DetailView):
@@ -60,6 +63,7 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
+@login_required
 def vote(request, question_id):
     """View for vote page of that question_id question.
 
@@ -77,10 +81,18 @@ def vote(request, question_id):
         return render(request, 'polls/detail.html', {
             'question': question,
             'error_message': "You didn't select a choice.",
+            'vote_status': question.voted_status(request.user),
         })
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
+        # check & update/add
+        try:
+            previous_vote = request.user.vote_set.get(question=question)
+            previous_vote.choice = selected_choice
+            previous_vote.save()
+        except (KeyError, Vote.DoesNotExist):
+            Vote.objects.create(question=question, choice=selected_choice, user=request.user)
+
+        question.update_question_vote()
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.

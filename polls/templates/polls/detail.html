@@ -11,9 +11,15 @@
 </div>
 
 <div id="middle">
+    <div id="user-bar">
+        <ul>
+            Current user: {{ user.username }}
+            <a href="{% url 'logout' %}"><button>Logout</button></a>
+        </ul>
+    </div>
     <div id="items_list">
         <a href="{% url 'polls:index' %}"><button>Back to List of Polls</button></a>
-        <p>Answer: </p>
+        <p>Answer: {{ vote_status }}</p>
         <ul>
         <form action="{% url 'polls:vote' question.id %}" method="post">
             {% csrf_token %}

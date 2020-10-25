@@ -1,0 +1,36 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+
+<div id="header">
+    {% block content %}
+    <ul><h1>Register</h1></ul>
+    {% if messages %}
+        <ul class="messages">
+            {% for msg in messages %}
+            <strong>{{ msg }}</strong>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<div id="middle">
+   <ul>
+        <form method="POST">
+        {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+                <tr>
+                    <td colspan="2">
+                        <button type="submit">Register</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        {% endblock %}
+       <a href="{% url 'login' %}"><button>Login again</button></a>
+       <a href="{% url 'polls:index' %}"><button>Back to List of Polls</button></a>
+   </ul>
+</div>
+
+<div id="bottom"></div>

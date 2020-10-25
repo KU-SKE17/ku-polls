@@ -46,6 +46,9 @@ button:hover, input:hover {
     height: 80%;
 }
 
+#user-bar {
+}
+
 #bottom {
     background-color: purple;
     height: 8%;

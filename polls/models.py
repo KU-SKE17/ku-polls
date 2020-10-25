@@ -1,6 +1,7 @@
 """Models for Question and Choice."""
 import datetime
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
@@ -82,6 +83,27 @@ class Question(models.Model):
     was_closed_recently.boolean = True
     was_closed_recently.short_description = 'Closed recently?'
 
+    def update_question_vote(self):
+        """Update number of votes for each choice base on Vote item"""
+        for choice in self.choice_set.all():
+            choice.update_vote()
+            choice.save()
+
+    def voted_status(self, user):
+        """Return a string represent of the user vote status.
+
+        Args:
+            user : Current user
+
+        Return:
+            String : the user vote status
+        """
+        try:
+            previous_vote = user.vote_set.get(question=self)
+            return f"{user.username} have voted for {previous_vote.choice}"
+        except (KeyError, Vote.DoesNotExist):
+            return f"{user.username} have never voted for this question before"
+
 
 class Choice(models.Model):
     """Choice Model.
@@ -94,6 +116,9 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
+    def update_vote(self):
+        self.votes = len(self.vote_set.all())
+
     def __str__(self):
         """Return a string represent of the choice.
 
@@ -101,3 +126,15 @@ class Choice(models.Model):
             String : the choice text
         """
         return self.choice_text
+
+
+class Vote(models.Model):
+    """Vote Model.
+
+    Args:
+        models : Vote details (question, choice, user)
+    """
+
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
