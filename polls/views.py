@@ -49,11 +49,16 @@ def detail(request, question_id):
     """
     question = get_object_or_404(Question, pk=question_id)
     status = question.voted_status(request.user)
+    current_choice = question.get_current_choice(request.user)
     if not question.can_vote():
         msg = f"Poll: \"{question.question_text}\" is not longer publish."
         messages.error(request, msg)
         return HttpResponseRedirect(reverse('polls:index'))
-    return render(request, 'polls/detail.html', {'question': question, 'vote_status': status})
+    return render(request, 'polls/detail.html', {
+        'question': question,
+        'vote_status': status,
+        'current_choice': current_choice
+    })
 
 
 class ResultsView(generic.DetailView):
@@ -85,14 +90,7 @@ def vote(request, question_id):
         })
     else:
         # check & update/add
-        try:
-            previous_vote = request.user.vote_set.get(question=question)
-            previous_vote.choice = selected_choice
-            previous_vote.save()
-        except (KeyError, Vote.DoesNotExist):
-            Vote.objects.create(question=question, choice=selected_choice, user=request.user)
-
-        question.update_question_vote()
+        question.update_question_vote(request.user, selected_choice)
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
