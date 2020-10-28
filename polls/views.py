@@ -1,4 +1,6 @@
 """Views for polls app."""
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -7,7 +9,15 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Choice, Question, Vote
+from .models import Choice, Question
+
+# Why can't use setting.py?
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] %(levelname)-4s %(message)s',
+    datefmt='%d/%b/%Y %H:%M:%S',
+)
+logger = logging.getLogger(__name__)
 
 
 class IndexView(generic.ListView):
@@ -22,16 +32,6 @@ class IndexView(generic.ListView):
             pub_date__lte=timezone.now()
         ).order_by('-pub_date')[:]
 
-
-# class DetailView(generic.DetailView):
-#     model = Question
-#     template_name = 'polls/detail.html'
-#
-#     def get_queryset(self):
-#         """
-#         Excludes any questions that aren't published yet.
-#         """
-#         return Question.objects.filter(pub_date__lte=timezone.now())
 
 @login_required
 def detail(request, question_id):
@@ -49,11 +49,16 @@ def detail(request, question_id):
     """
     question = get_object_or_404(Question, pk=question_id)
     status = question.voted_status(request.user)
+    current_choice = question.get_current_choice(request.user)
     if not question.can_vote():
         msg = f"Poll: \"{question.question_text}\" is not longer publish."
         messages.error(request, msg)
         return HttpResponseRedirect(reverse('polls:index'))
-    return render(request, 'polls/detail.html', {'question': question, 'vote_status': status})
+    return render(request, 'polls/detail.html', {
+        'question': question,
+        'vote_status': status,
+        'current_choice': current_choice
+    })
 
 
 class ResultsView(generic.DetailView):
@@ -85,16 +90,10 @@ def vote(request, question_id):
         })
     else:
         # check & update/add
-        try:
-            previous_vote = request.user.vote_set.get(question=question)
-            previous_vote.choice = selected_choice
-            previous_vote.save()
-        except (KeyError, Vote.DoesNotExist):
-            Vote.objects.create(question=question, choice=selected_choice, user=request.user)
-
-        question.update_question_vote()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
+        question.update_question_vote(request.user, selected_choice)
+        logger.info('user: {user} - voted for poll#{poll_id}'.format(
+            user=request.user.username,
+            poll_id=question.id
+        ))
         url = reverse('polls:results', args=(question.id,))
         return HttpResponseRedirect(url)

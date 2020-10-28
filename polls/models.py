@@ -83,8 +83,15 @@ class Question(models.Model):
     was_closed_recently.boolean = True
     was_closed_recently.short_description = 'Closed recently?'
 
-    def update_question_vote(self):
-        """Update number of votes for each choice base on Vote item"""
+    def update_question_vote(self, user, choice):
+        """Add a vote and Update number of votes for each choice base on Vote item"""
+        try:
+            previous_vote = user.vote_set.get(question=self)
+            previous_vote.choice = choice
+            previous_vote.save()
+        except (KeyError, Vote.DoesNotExist):
+            Vote.objects.create(question=self, choice=choice, user=user)
+
         for choice in self.choice_set.all():
             choice.update_vote()
             choice.save()
@@ -103,6 +110,13 @@ class Question(models.Model):
             return f"{user.username} have voted for {previous_vote.choice}"
         except (KeyError, Vote.DoesNotExist):
             return f"{user.username} have never voted for this question before"
+
+    def get_current_choice(self, user):
+        try:
+            previous_vote = user.vote_set.get(question=self)
+            return previous_vote.choice
+        except (KeyError, Vote.DoesNotExist):
+            return False
 
 
 class Choice(models.Model):

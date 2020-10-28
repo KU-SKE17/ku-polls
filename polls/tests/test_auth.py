@@ -30,10 +30,13 @@ class AuthTests(TestCase):
 
     def setUp(self):
         self.question = create_question(question_text='Past Question.', days=-5)
-        self.user = get_user_model().objects.create_user(username="Kitty", email="yoyo@gmail.com", password="@yoyo007")
-        self.user.first_name = "Yoyo"
-        self.user.last_name = "Limkool"
-        self.user.save()
+        self.user = get_user_model().objects.create_user(
+            username="Kitty",
+            email="yoyo@gmail.com",
+            password="@yoyo007",
+            first_name="Yoyo",
+            last_name="Limkool"
+        )
 
     def test_login_to_index(self):
         """Check index page contain username after login"""
